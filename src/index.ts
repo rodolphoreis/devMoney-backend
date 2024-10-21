@@ -38,6 +38,27 @@ app.post("/transactions", async (req, res) => {
   }
 });
 
+app.put("/transactions/:id", async (req, res) => {
+  const { id } = req.params;
+  const { description, amount, type, createdAt, updatedAt } = req.body;
+  try {
+    const updatedTransaction = await prisma.transaction.update({
+      where: { id },
+      data: {
+        description,
+        amount,
+        type,
+        createdAt,
+        updatedAt,
+      },
+    });
+    res.json(updatedTransaction);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Error updating transaction" });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
