@@ -59,6 +59,17 @@ app.put("/transactions/:id", async (req, res) => {
   }
 });
 
+app.delete("/transactions/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await prisma.transaction.delete({ where: { id } });
+    res.status(204).send();
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Error deleting transaction" });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
