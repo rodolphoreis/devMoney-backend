@@ -19,12 +19,14 @@ app.get("/transactions", async (req, res) => {
 });
 
 app.post("/transactions", async (req, res) => {
-  const { id, description, amount, type, createdAt, updatedAt } = req.body;
+  const { id, description, category, amount, type, createdAt, updatedAt } =
+    req.body;
   try {
     const newTransaction = await prisma.transaction.create({
       data: {
         id,
         description,
+        category,
         amount,
         type,
         createdAt,
@@ -40,12 +42,14 @@ app.post("/transactions", async (req, res) => {
 
 app.put("/transactions/:id", async (req, res) => {
   const { id } = req.params;
-  const { description, amount, type, createdAt, updatedAt } = req.body;
+  const { description, category, amount, type, createdAt, updatedAt } =
+    req.body;
   try {
     const updatedTransaction = await prisma.transaction.update({
       where: { id },
       data: {
         description,
+        category,
         amount,
         type,
         createdAt,
@@ -61,9 +65,10 @@ app.put("/transactions/:id", async (req, res) => {
 
 app.delete("/transactions/:id", async (req, res) => {
   const { id } = req.params;
+
   try {
     await prisma.transaction.delete({ where: { id } });
-    res.status(204).send();
+    res.sendStatus(204);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Error deleting transaction" });
