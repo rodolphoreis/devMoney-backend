@@ -5,7 +5,7 @@ import prisma from "../prisma/prismaClient";
 const app = express();
 app.use(
   cors({
-    origin: "ttps://devmoney-backend.onrender.com/transactions",
+    origin: "http://localhost:3001",
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
