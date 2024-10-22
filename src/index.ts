@@ -5,8 +5,8 @@ import prisma from "../prisma/prismaClient";
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:3001",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: ["http://localhost:3001", "https://dev-money-rreis.vercel.app"],
+    methods: ["GET", "POST", "DELETE"],
   })
 );
 app.use(express.json());
@@ -51,6 +51,17 @@ app.put("/transactions/:id", async (req, res) => {
   const { id } = req.params;
   const { description, category, amount, type, createdAt, updatedAt } =
     req.body;
+
+  console.log("ID recebido para atualização:", id);
+  console.log("Dados da transação:", {
+    description,
+    category,
+    amount,
+    type,
+    createdAt,
+    updatedAt,
+  });
+
   try {
     const updatedTransaction = await prisma.transaction.update({
       where: { id },
@@ -65,7 +76,7 @@ app.put("/transactions/:id", async (req, res) => {
     });
     res.json(updatedTransaction);
   } catch (error) {
-    console.log(error);
+    console.log("Erro ao atualizar a transação:", error);
     res.status(500).json({ error: "Error updating transaction" });
   }
 });
