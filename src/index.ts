@@ -3,7 +3,12 @@ import cors from "cors";
 import prisma from "../prisma/prismaClient";
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: "ttps://devmoney-backend.onrender.com/transactions",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 app.use(express.json());
 
 const port = 3333;
@@ -19,6 +24,8 @@ app.get("/transactions", async (req, res) => {
 });
 
 app.post("/transactions", async (req, res) => {
+  console.log("Request body: ", req.body);
+
   const { id, description, category, amount, type, createdAt, updatedAt } =
     req.body;
   try {
@@ -35,7 +42,7 @@ app.post("/transactions", async (req, res) => {
     });
     res.status(201).json(newTransaction);
   } catch (error) {
-    console.log(error);
+    console.error("Error creating transaction:", error);
     res.status(500).json({ error: "Error creating transaction" });
   }
 });
