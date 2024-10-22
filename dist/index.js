@@ -33,7 +33,12 @@ var prismaClient_default = prisma;
 
 // src/index.ts
 var app = (0, import_express.default)();
-app.use((0, import_cors.default)());
+app.use(
+  (0, import_cors.default)({
+    origin: "ttps://devmoney-backend.onrender.com/transactions",
+    methods: ["GET", "POST", "PUT", "DELETE"]
+  })
+);
 app.use(import_express.default.json());
 var port = 3333;
 app.get("/transactions", async (req, res) => {
@@ -46,6 +51,7 @@ app.get("/transactions", async (req, res) => {
   }
 });
 app.post("/transactions", async (req, res) => {
+  console.log("Request body: ", req.body);
   const { id, description, category, amount, type, createdAt, updatedAt } = req.body;
   try {
     const newTransaction = await prismaClient_default.transaction.create({
@@ -61,7 +67,7 @@ app.post("/transactions", async (req, res) => {
     });
     res.status(201).json(newTransaction);
   } catch (error) {
-    console.log(error);
+    console.error("Error creating transaction:", error);
     res.status(500).json({ error: "Error creating transaction" });
   }
 });
